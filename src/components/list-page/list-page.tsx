@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import styles from "./list-page.module.css";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
@@ -8,6 +8,7 @@ import { Circle } from "../ui/circle/circle";
 import { ArrowIcon } from "../ui/icons/arrow-icon";
 import { delay } from "../../utils/utils";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { List } from "./class";
 
 type TItem = {
   value: string;
@@ -15,86 +16,31 @@ type TItem = {
   position?: number;
 };
 
-class List<T> {
-  arr: TItem[] = [
+export const ListPage: React.FC = () => {
+  const defaultValues = [
     { value: "0", color: ElementStates.Default },
     { value: "34", color: ElementStates.Default },
     { value: "8", color: ElementStates.Default },
     { value: "1", color: ElementStates.Default },
   ];
-
-  head = 0;
-  tail = this.arr.length - 1;
-
-  pushInHead = (el: TItem) => {
-    this.arr.unshift(el);
-  };
-
-  removeHead = () => {
-    this.arr.shift();
-  };
-
-  pushInTail = (el: TItem) => {
-    this.arr.push(el);
-  };
-
-  removeTail = () => {
-    this.arr.pop();
-  };
-
-  pushByIndx = (el: TItem, position: string) => {
-    const num = Number(position);
-    return this.arr.splice(num, 0, el);
-  };
-
-  removeByIndx = (position: string) => {
-    const num = Number(position);
-    return this.arr.splice(num, 1);
-  };
-
-  getLastEl = (): any => {
-    for (let i = this.arr.length - 1; i >= 0; i--) {
-      if (this.arr[i].value != "") {
-        return this.arr[i];
-      }
-    }
-  };
-
-  setAllElDefaultCollor = () => {
-    for (let i = 0; i <= this.arr.length - 1; i++) {
-      this.arr[i].color = ElementStates.Default;
-    }
-  };
-
-  setHead = () => {
-    this.head = 0;
-  };
-
-  setTail = () => {
-    this.tail = this.arr.length - 1;
-  };
-
-  getHead = () => {
-    return this.head;
-  };
-
-  getTail = () => {
-    return this.tail;
-  };
-}
-
-export const ListPage: React.FC = () => {
-  const [list] = useState(new List<TItem>());
+  const [list] = useState(new List(defaultValues));
   const [listArr, setListArr] = useState(list.arr);
-
-  let [inputState, setInputState] = useState("");
-  let [inputIndxState, setInputIndxState] = useState("");
-  let [smallCircle, setSmallCircle] = useState<TItem>({
+  const [inputState, setInputState] = useState("");
+  const [disbledbttn, setDisabledBttn] = useState(false);
+  const [inputIndxState, setInputIndxState] = useState("");
+  const [isbottomOper, setbottomOper] = useState(false);
+  const [isAddHead, setAddHead] = useState(false);
+  const [isRemoveHead, setRemoveHead] = useState(false);
+  const [isAddTail, setAddTail] = useState(false);
+  const [isRemoveTail, setRemoveTail] = useState(false);
+  const [isAddIndx, setAddIndx] = useState(false);
+  const [isRemoveIndx, setRemoveIndx] = useState(false);
+  const [isOperationStarted, setOperationStarted] = useState(false);
+  const [smallCircle, setSmallCircle] = useState<TItem>({
     value: "",
     color: ElementStates.Changing,
     position: -1,
   });
-  let [isbottomOper, setbottomOper] = useState(false);
 
   const setDefaultCircle = () => {
     setSmallCircle({
@@ -105,23 +51,31 @@ export const ListPage: React.FC = () => {
   };
 
   const clearInputs = () => {
-    setInputIndxState((inputIndxState = ""));
-    setInputState((inputState = ""));
+    setInputIndxState("");
+    setInputState("");
   };
 
   const changeInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setInputState((inputState = evt.target.value));
+    setInputState(evt.target.value);
   };
 
   const changeIndxInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setInputIndxState((inputIndxState = evt.target.value));
+    setInputIndxState(evt.target.value);
+    const num = Number(evt.target.value);
+    if (num > list.arr.length) {
+      setDisabledBttn(true);
+    } else {
+      setDisabledBttn(false);
+    }
   };
 
   const changeBottomOper = () => {
-    setbottomOper((isbottomOper = !isbottomOper));
+    setbottomOper((isbottomOper) => !isbottomOper);
   };
 
   const addHeadEl = async () => {
+    setOperationStarted(true);
+    setAddHead(true);
     setSmallCircle({
       ...smallCircle,
       position: 0,
@@ -136,9 +90,13 @@ export const ListPage: React.FC = () => {
     list.arr[list.head].color = ElementStates.Default;
     setListArr([...list.arr]);
     clearInputs();
+    setAddHead(false);
+    setOperationStarted(false);
   };
 
   const removeHeadEl = async () => {
+    setOperationStarted(true);
+    setRemoveHead(true);
     changeBottomOper();
     setSmallCircle({
       ...smallCircle,
@@ -146,15 +104,19 @@ export const ListPage: React.FC = () => {
       value: list.arr[0].value,
     });
     await delay(SHORT_DELAY_IN_MS);
+    clearInputs();
     list.removeHead();
     setDefaultCircle();
-    changeBottomOper();
     list.setTail();
     setListArr([...list.arr]);
-    clearInputs();
+    changeBottomOper();
+    setRemoveHead(false);
+    setOperationStarted(false);
   };
 
   const addTailEl = async () => {
+    setOperationStarted(true);
+    setAddTail(true);
     setSmallCircle({
       ...smallCircle,
       position: list.arr.length - 1,
@@ -169,9 +131,13 @@ export const ListPage: React.FC = () => {
     list.getLastEl().color = ElementStates.Default;
     setListArr([...list.arr]);
     clearInputs();
+    setAddTail(false);
+    setOperationStarted(false);
   };
 
   const removeTailEl = async () => {
+    setOperationStarted(true);
+    setRemoveTail(true);
     changeBottomOper();
     setSmallCircle({
       ...smallCircle,
@@ -186,6 +152,8 @@ export const ListPage: React.FC = () => {
     setListArr([...list.arr]);
     clearInputs();
     changeBottomOper();
+    setRemoveTail(false);
+    setOperationStarted(false);
   };
 
   const runAnimAddByIndx = async (num: number, end: number) => {
@@ -205,6 +173,7 @@ export const ListPage: React.FC = () => {
   };
 
   const runAnimRemoveByIndx = async (end: number) => {
+    setOperationStarted(true);
     for (let i = 0; i <= end; i++) {
       list.arr[i].color = ElementStates.Changing;
       setListArr([...list.arr]);
@@ -217,9 +186,12 @@ export const ListPage: React.FC = () => {
       position: end,
     });
     await delay(SHORT_DELAY_IN_MS);
+    setOperationStarted(false);
   };
 
   const pushElByIndx = async () => {
+    setOperationStarted(true);
+    setAddIndx(true);
     let num = 0;
     const end = Number(inputIndxState);
     await runAnimAddByIndx(num, end);
@@ -235,9 +207,13 @@ export const ListPage: React.FC = () => {
     list.arr[end].color = ElementStates.Default;
     setListArr([...list.arr]);
     clearInputs();
+    setAddIndx(false);
+    setOperationStarted(false);
   };
 
   const removeByIndx = async () => {
+    setOperationStarted(true);
+    setRemoveIndx(true);
     changeBottomOper();
     const end = Number(inputIndxState);
     await runAnimRemoveByIndx(end);
@@ -249,6 +225,8 @@ export const ListPage: React.FC = () => {
     setListArr([...list.arr]);
     changeBottomOper();
     clearInputs();
+    setRemoveIndx(false);
+    setOperationStarted(false);
   };
 
   return (
@@ -264,15 +242,27 @@ export const ListPage: React.FC = () => {
           <Button
             text="Добавить в head"
             onClick={addHeadEl}
-            disabled={!inputState}
+            disabled={!inputState || isOperationStarted}
+            isLoader={isAddHead}
           />
           <Button
             text="Добавить в tail"
-            disabled={!inputState}
+            disabled={!inputState || isOperationStarted}
             onClick={addTailEl}
+            isLoader={isAddTail}
           />
-          <Button text="Удалить из head" onClick={removeHeadEl} />
-          <Button text="Удалить из tail" onClick={removeTailEl} />
+          <Button
+            text="Удалить из head"
+            onClick={removeHeadEl}
+            isLoader={isRemoveHead}
+            disabled={list.isEmpty() || isOperationStarted}
+          />
+          <Button
+            text="Удалить из tail"
+            onClick={removeTailEl}
+            isLoader={isRemoveTail}
+            disabled={list.isEmpty() || isOperationStarted}
+          />
           <Input
             maxLength={4}
             type="number"
@@ -283,19 +273,21 @@ export const ListPage: React.FC = () => {
           <Button
             extraClass={styles.index_add}
             text="Добавить по индексу"
-            disabled={!inputIndxState}
+            disabled={!inputIndxState || !inputState || isOperationStarted}
             onClick={pushElByIndx}
+            isLoader={isAddIndx}
           />
           <Button
             extraClass={styles.index_remove}
             text="Удалить по индексу"
-            disabled={!inputIndxState}
+            disabled={!inputIndxState || disbledbttn || isOperationStarted}
             onClick={removeByIndx}
+            isLoader={isRemoveIndx}
           />
         </div>
       </div>
       <ul className={styles.circle_list}>
-        {listArr?.map((el: TItem, index: number) => (
+        {listArr?.map((el, index) => (
           <li className={styles.circles_box} key={index}>
             {smallCircle.position === index && (
               <Circle

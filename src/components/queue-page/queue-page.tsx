@@ -7,98 +7,26 @@ import { ElementStates } from "../../types/element-states";
 import { Circle } from "../ui/circle/circle";
 import { delay } from "../../utils/utils";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { Queue } from "./class";
 
-type TItem = {
-  value: string;
-  color: ElementStates;
-};
-
-class Queue<T> {
-  arr = Array.from({ length: 7 }, () => ({
-    value: "",
-    color: ElementStates.Default,
-  }));
-
-  head = -1;
-  tail = -1;
-  turn = 0;
-
-  push = (el: TItem) => {
-    if (this.head === -1 && this.tail === -1 && this.turn != 0) {
-      this.arr[this.turn] = el;
-      this.tail = this.turn - 1;
-      this.head = this.turn;
-      this.turn++;
-    } else {
-      this.arr[this.turn] = el;
-      this.turn++;
-    }
-    if (this.tail < 6) {
-      this.tail++;
-    }
-    if (this.head < 0) {
-      this.head++;
-    }
-  };
-
-  pop = () => {
-    this.arr[this.head].value = "";
-    if (this.head != this.tail) {
-      this.head++;
-    } else {
-      this.head = -1;
-      this.tail = -1;
-      this.turn--;
-    }
-  };
-
-  getLastEl = (): any => {
-    for (let i = this.arr.length - 1; i >= 0; i--) {
-      if (this.arr[i].value != "") {
-        return this.arr[i];
-      }
-    }
-  };
-
-  getFirstEl = (): any => {
-    for (let i = 0; i <= this.arr.length - 1; i++) {
-      if (this.arr[i].value != "") {
-        return this.arr[i];
-      }
-    }
-  };
-
-  getHead = () => {
-    return this.head;
-  };
-
-  getTail = () => {
-    return this.tail;
-  };
-
-  clearArr = () => {
-    this.head = -1;
-    this.tail = -1;
-    this.turn = 0;
-    return (this.arr = Array.from({ length: 7 }, () => ({
-      value: "",
-      color: ElementStates.Default,
-      head: false,
-    })));
-  };
-
-  elements = () => this.arr;
-
-  size = () => this.arr.length;
+class TItem {
+  value!: string;
+  color!: ElementStates;
 }
+export const defaultValues = Array.from({ length: 7 }, () => ({
+  value: "",
+  color: ElementStates.Default,
+}));
 
 export const QueuePage: React.FC = () => {
-  const [queue] = useState(new Queue<TItem>());
+  const [queue] = useState(new Queue(defaultValues));
   const [queueArr, setQueueArr] = useState(queue.arr);
-  let [inputState, setInputState] = useState("");
+  const [inputState, setInputState] = useState("");
+  const [isAddLoad, setAddLoad] = useState(false);
+  const [isRemoveLoad, setRemoveLoad] = useState(false);
 
   const changeInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setInputState((inputState = evt.target.value));
+    setInputState(evt.target.value);
   };
 
   const clearInput = () => {
@@ -111,21 +39,25 @@ export const QueuePage: React.FC = () => {
   };
 
   const addEl = async () => {
+    setAddLoad(true);
     queue.push({ value: inputState, color: ElementStates.Changing });
     setQueueArr([...queue.arr]);
     clearInput();
     await delay(SHORT_DELAY_IN_MS);
     queue.getLastEl().color = ElementStates.Default;
     setQueueArr([...queue.arr]);
+    setAddLoad(false);
   };
 
   const deleteEl = async () => {
+    setRemoveLoad(true);
     queue.getFirstEl().color = ElementStates.Changing;
     setQueueArr([...queue.arr]);
     await delay(SHORT_DELAY_IN_MS);
     queue.getFirstEl().color = ElementStates.Default;
     queue.pop();
     setQueueArr([...queue.arr]);
+    setRemoveLoad(false);
   };
 
   return (
@@ -138,13 +70,27 @@ export const QueuePage: React.FC = () => {
           onChange={changeInput}
         />
         <div className={styles.buttons_wrapper}>
-          <Button text="Добавить" onClick={addEl} disabled={!inputState} />
-          <Button text="Удалить" onClick={deleteEl} />
-          <Button text="Очистить" onClick={clearArr} />
+          <Button
+            text="Добавить"
+            onClick={addEl}
+            disabled={!inputState}
+            isLoader={isAddLoad}
+          />
+          <Button
+            text="Удалить"
+            onClick={deleteEl}
+            disabled={queue.isEmpty() || isAddLoad}
+            isLoader={isRemoveLoad}
+          />
+          <Button
+            text="Очистить"
+            onClick={clearArr}
+            disabled={queue.isEmpty() || isAddLoad || isRemoveLoad}
+          />
         </div>
       </div>
       <ul className={styles.circle_list}>
-        {queueArr?.map((el: TItem, index: number) => (
+        {queueArr?.map((el, index) => (
           <li key={index}>
             <Circle
               letter={el.value}

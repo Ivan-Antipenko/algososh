@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./stack-page.module.css";
 import { Button } from "../ui/button/button";
 import { Input } from "../ui/input/input";
@@ -7,43 +7,22 @@ import { ElementStates } from "../../types/element-states";
 import { Circle } from "../ui/circle/circle";
 import { delay } from "../../utils/utils";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { Stack } from "./class";
 
 type TItem = {
   value: string;
   color: ElementStates;
 };
 
-class Stack<T> {
-  arr: TItem[] = [];
-
-  push = (el: TItem) => {
-    this.arr.push(el);
-  };
-
-  pop = () => {
-    this.arr.pop();
-  };
-
-  clear = () => {
-    this.arr = [];
-  };
-
-  get lastEl(): TItem {
-    return this.arr[this.arr.length - 1];
-  }
-
-  elements = () => this.arr;
-
-  size = () => this.arr.length;
-}
-
 export const StackPage: React.FC = () => {
   const [stack] = useState(new Stack<TItem>());
   const [stackArr, setStackArr] = useState<TItem[]>(stack.arr);
-  let [inputState, setInputState] = useState("");
+  const [inputState, setInputState] = useState("");
+  const [isAddLoad, setAddLoad] = useState(false);
+  const [isRemoveLoad, setRemoveLoad] = useState(false);
 
   const changeInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setInputState((inputState = evt.target.value));
+    setInputState(evt.target.value);
   };
 
   const clearInput = () => {
@@ -51,20 +30,24 @@ export const StackPage: React.FC = () => {
   };
 
   const addEl = async () => {
+    setAddLoad(true);
     stack.push({ value: inputState, color: ElementStates.Changing });
     setStackArr([...stack.elements()]);
     clearInput();
     await delay(SHORT_DELAY_IN_MS);
     stack.lastEl.color = ElementStates.Default;
     setStackArr([...stack.elements()]);
+    setAddLoad(false);
   };
 
   const deleteEl = async () => {
+    setRemoveLoad(true);
     stack.lastEl.color = ElementStates.Changing;
     setStackArr([...stack.elements()]);
     await delay(SHORT_DELAY_IN_MS);
     stack.pop();
     setStackArr([...stack.elements()]);
+    setRemoveLoad(false);
   };
 
   const clearArr = () => {
@@ -90,14 +73,28 @@ export const StackPage: React.FC = () => {
           onChange={changeInput}
         />
         <div className={styles.buttons_wrapper}>
-          <Button text="Добавить" onClick={addEl} disabled={!inputState} />
-          <Button text="Удалить" onClick={deleteEl} />
-          <Button text="Очистить" onClick={clearArr} />
+          <Button
+            text="Добавить"
+            onClick={addEl}
+            isLoader={isAddLoad}
+            disabled={!inputState}
+          />
+          <Button
+            text="Удалить"
+            onClick={deleteEl}
+            disabled={stack.arr.length <= 0}
+            isLoader={isRemoveLoad}
+          />
+          <Button
+            text="Очистить"
+            onClick={clearArr}
+            disabled={stack.arr.length <= 0}
+          />
         </div>
       </div>
 
       <ul className={styles.circle_list}>
-        {stackArr?.map((el: any, index: number) => (
+        {stackArr?.map((el, index) => (
           <li key={index}>
             <Circle
               letter={el.value}

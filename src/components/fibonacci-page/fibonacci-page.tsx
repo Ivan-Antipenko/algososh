@@ -9,11 +9,11 @@ import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 const calcFibonacci = (str: string) => {
   const num = Number(str);
-  let fibArr = ["1", "1"];
+  const fibArr = ["1", "1"];
   for (let i = 2; i < num + 1; i++) {
-    let prev1 = Number(fibArr[i - 1]);
-    let prev2 = Number(fibArr[i - 2]);
-    let res = prev1 + prev2;
+    const prev1 = Number(fibArr[i - 1]);
+    const prev2 = Number(fibArr[i - 2]);
+    const res = prev1 + prev2;
     fibArr.push(String(res));
   }
   return fibArr;
@@ -33,12 +33,19 @@ const showFibArr = async (
 };
 
 export const FibonacciPage: React.FC = () => {
-  let [inputState, setInputState] = useState("");
-  let [resultArr, setResultArr] = useState<string[]>([]);
-  let [isLoad, setLoad] = useState(false);
+  const [inputState, setInputState] = useState("");
+  const [disabledBttn, setDisabledBttn] = useState(false);
+  const [resultArr, setResultArr] = useState<string[]>([]);
+  const [isLoad, setLoad] = useState(false);
 
   const changeValueInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setInputState((inputState = evt.target.value));
+    setInputState(evt.target.value);
+    const num = Number(evt.target.value);
+    if (num > 19) {
+      setDisabledBttn(true);
+    } else {
+      setDisabledBttn(false);
+    }
   };
 
   const runFibCalc = () => {
@@ -58,12 +65,12 @@ export const FibonacciPage: React.FC = () => {
         <Button
           text="Рассчитать"
           onClick={runFibCalc}
-          disabled={!inputState}
+          disabled={!inputState || disabledBttn}
           isLoader={isLoad}
         />
       </div>
       <ul className={styles.circle_list}>
-        {resultArr?.map((el: string, index: number) => (
+        {resultArr?.map((el, index) => (
           <li key={index}>
             <Circle letter={el} index={index} />
           </li>

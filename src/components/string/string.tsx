@@ -45,12 +45,12 @@ const reverseString = async (
 };
 
 export const StringComponent: React.FC = () => {
-  let [inputState, setInputState] = useState("");
-  let [resultArr, setResultArr] = useState<TStringArr[]>([]);
-  let [isLoad, setLoad] = useState(false);
+  const [inputState, setInputState] = useState("");
+  const [resultArr, setResultArr] = useState<TStringArr[]>([]);
+  const [isLoad, setLoad] = useState(false);
 
   const changeValueInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setInputState((inputState = evt.target.value));
+    setInputState(evt.target.value);
   };
 
   const deployString = () => {
@@ -69,10 +69,15 @@ export const StringComponent: React.FC = () => {
           value={inputState}
           onChange={changeValueInput}
         />
-        <Button text="Развернуть" onClick={deployString} isLoader={isLoad} />
+        <Button
+          text="Развернуть"
+          onClick={deployString}
+          isLoader={isLoad}
+          disabled={!inputState}
+        />
       </div>
       <ul className={styles.circle_list}>
-        {resultArr?.map((el: any, index: number) => (
+        {resultArr?.map((el, index) => (
           <li key={index}>
             <Circle letter={el.value} state={el.color} />
           </li>

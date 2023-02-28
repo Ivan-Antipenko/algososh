@@ -150,25 +150,25 @@ const startingBubbleDescending = async (
 };
 
 export const SortingPage: React.FC = () => {
-  let [sortArray, setSortArray] = useState<TSortArr[]>([]);
-  let [radioType, setRadioType] = useState("choise");
-  let [sortType, setSortType] = useState<Direction>();
-  let [isLoad, setLoad] = useState(false);
+  const [sortArray, setSortArray] = useState<TSortArr[]>([]);
+  const [radioType, setRadioType] = useState("choise");
+  const [sortType, setSortType] = useState<Direction>();
+  const [isLoad, setLoad] = useState(false);
 
   useEffect(() => {
     return createRandomArr(setSortArray, sortArray);
   }, []);
 
   const changeRadioChoise = () => {
-    setRadioType((radioType = "choise"));
+    setRadioType("choise");
   };
 
   const changeRadioBubble = () => {
-    setRadioType((radioType = "bubble"));
+    setRadioType("bubble");
   };
 
   const changeSortType = (sorting: Direction) => {
-    setSortType((sortType = sorting));
+    setSortType(sorting);
     if (sortType === Direction.Ascending && radioType === "choise") {
       startingChoiseAscending(sortArray, setSortArray, setLoad);
     }
@@ -229,7 +229,7 @@ export const SortingPage: React.FC = () => {
 
       <div className={styles.columns_list_wrapper}>
         <ul className={styles.columns_list}>
-          {sortArray?.map((el: any, index: number) => (
+          {sortArray?.map((el, index) => (
             <li key={index}>
               <Column index={el.value} state={el.color} />
             </li>
