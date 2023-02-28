@@ -1,0 +1,23 @@
+.input_button_wrapper {
+  display: flex;
+  width: 829px;
+  margin: 0 auto;
+  gap: 12px;
+}
+
+.buttons_wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.circle_list {
+  list-style-type: none;
+  padding: 120px 0 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 0 auto;
+  max-width: 1100px;
+}
