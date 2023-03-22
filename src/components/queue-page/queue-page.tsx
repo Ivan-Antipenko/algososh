@@ -71,18 +71,21 @@ export const QueuePage: React.FC = () => {
         />
         <div className={styles.buttons_wrapper}>
           <Button
+            extraClass="addButton"
             text="Добавить"
             onClick={addEl}
             disabled={!inputState}
             isLoader={isAddLoad}
           />
           <Button
+            extraClass="removeButton"
             text="Удалить"
             onClick={deleteEl}
             disabled={queue.isEmpty() || isAddLoad}
             isLoader={isRemoveLoad}
           />
           <Button
+            extraClass="clearButton"
             text="Очистить"
             onClick={clearArr}
             disabled={queue.isEmpty() || isAddLoad || isRemoveLoad}

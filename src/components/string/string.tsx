@@ -13,7 +13,7 @@ type TStringArr = {
   color: ElementStates;
 };
 
-const reverseString = async (
+export const reverseString = async (
   arr: TStringArr[],
   setLoad: Dispatch<SetStateAction<boolean>>,
   setResultArr: Dispatch<SetStateAction<TStringArr[]>>

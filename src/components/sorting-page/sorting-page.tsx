@@ -29,7 +29,7 @@ const createRandomArr = (
   setSortArray((sortArray = randomArr));
 };
 
-const startingChoiseAscending = async (
+export const startingChoiseAscending = async (
   arr: TSortArr[],
   setSortArray: Dispatch<SetStateAction<TSortArr[]>>,
   setLoad: Dispatch<SetStateAction<boolean>>
@@ -64,7 +64,7 @@ const startingChoiseAscending = async (
   setLoad(false);
 };
 
-const startingChoiseDescending = async (
+export const startingChoiseDescending = async (
   arr: TSortArr[],
   setSortArray: Dispatch<SetStateAction<TSortArr[]>>,
   setLoad: Dispatch<SetStateAction<boolean>>
@@ -99,7 +99,7 @@ const startingChoiseDescending = async (
   setLoad(false);
 };
 
-const startingBubbleAscending = async (
+export const startingBubbleAscending = async (
   arr: TSortArr[],
   setSortArray: Dispatch<SetStateAction<TSortArr[]>>,
   setLoad: Dispatch<SetStateAction<boolean>>
@@ -124,7 +124,7 @@ const startingBubbleAscending = async (
   setLoad(false);
 };
 
-const startingBubbleDescending = async (
+export const startingBubbleDescending = async (
   arr: TSortArr[],
   setSortArray: Dispatch<SetStateAction<TSortArr[]>>,
   setLoad: Dispatch<SetStateAction<boolean>>

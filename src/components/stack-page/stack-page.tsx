@@ -74,18 +74,21 @@ export const StackPage: React.FC = () => {
         />
         <div className={styles.buttons_wrapper}>
           <Button
+            extraClass="addButton"
             text="Добавить"
             onClick={addEl}
             isLoader={isAddLoad}
             disabled={!inputState}
           />
           <Button
+            extraClass="removeButton"
             text="Удалить"
             onClick={deleteEl}
             disabled={stack.arr.length <= 0}
             isLoader={isRemoveLoad}
           />
           <Button
+            extraClass="clearButton"
             text="Очистить"
             onClick={clearArr}
             disabled={stack.arr.length <= 0}

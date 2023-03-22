@@ -240,30 +240,35 @@ export const ListPage: React.FC = () => {
             onChange={changeInput}
           />
           <Button
+            extraClass="addHead"
             text="Добавить в head"
             onClick={addHeadEl}
             disabled={!inputState || isOperationStarted}
             isLoader={isAddHead}
           />
           <Button
+            extraClass="addTail"
             text="Добавить в tail"
             disabled={!inputState || isOperationStarted}
             onClick={addTailEl}
             isLoader={isAddTail}
           />
           <Button
+            extraClass="removeHead"
             text="Удалить из head"
             onClick={removeHeadEl}
             isLoader={isRemoveHead}
             disabled={list.isEmpty() || isOperationStarted}
           />
           <Button
+            extraClass="removeTail"
             text="Удалить из tail"
             onClick={removeTailEl}
             isLoader={isRemoveTail}
             disabled={list.isEmpty() || isOperationStarted}
           />
           <Input
+            extraClass="index_input"
             maxLength={4}
             type="number"
             value={inputIndxState}
@@ -271,14 +276,14 @@ export const ListPage: React.FC = () => {
             placeholder="Введите индекс"
           />
           <Button
-            extraClass={styles.index_add}
+            extraClass={`${styles.index_add} addIndex`}
             text="Добавить по индексу"
             disabled={!inputIndxState || !inputState || isOperationStarted}
             onClick={pushElByIndx}
             isLoader={isAddIndx}
           />
           <Button
-            extraClass={styles.index_remove}
+            extraClass={`${styles.index_remove} removeIndex`}
             text="Удалить по индексу"
             disabled={!inputIndxState || disbledbttn || isOperationStarted}
             onClick={removeByIndx}
