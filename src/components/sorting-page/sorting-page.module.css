@@ -1,0 +1,39 @@
+.all_buttons_wrapper {
+  display: flex;
+  justify-content: space-between;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.radio_wrapper {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.directions_wrapper {
+  display: flex;
+  margin-left: 52px;
+  gap: 12px;
+}
+
+.array_button {
+  margin-left: 80px;
+}
+
+.columns_list_wrapper {
+  margin-top: 70px;
+  display: flex;
+  height: 320px;
+}
+
+.columns_list {
+  max-width: 980px;
+  padding: 0;
+  margin: 0 auto;
+  list-style-type: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+}
