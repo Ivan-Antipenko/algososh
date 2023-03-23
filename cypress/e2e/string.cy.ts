@@ -1,8 +1,8 @@
 import { DELAY_IN_MS } from "../../src/constants/delays";
-
+import { baseUrl } from "../../src/constants/e2e";
 describe("String testing", () => {
   before(() => {
-    cy.visit("http://localhost:3000/recursion");
+    cy.visit(`${baseUrl}/recursion`);
   });
 
   it("Button is disabled if the input is empty", () => {
@@ -12,7 +12,7 @@ describe("String testing", () => {
 
   it("reverse string correct", () => {
     const string = "123";
-    cy.visit("http://localhost:3000/recursion");
+    cy.visit(`${baseUrl}/recursion`);
 
     cy.get("input").type(string);
     cy.get("button").contains("Развернуть").click();

@@ -1,8 +1,8 @@
 import { SHORT_DELAY_IN_MS } from "../../src/constants/delays";
-
+import { baseUrl } from "../../src/constants/e2e";
 describe("queue testing", () => {
   before(() => {
-    cy.visit("http://localhost:3000/queue");
+    cy.visit(`${baseUrl}/queue`);
   });
 
   it("button disabled if input is empty", () => {
@@ -15,7 +15,7 @@ describe("queue testing", () => {
     const el = 777;
     const el2 = 666;
     const el3 = 999;
-    cy.visit("http://localhost:3000/queue");
+    cy.visit(`${baseUrl}/queue`);
     cy.get("input").type(el);
     cy.get(".addButton").click();
     cy.get("[class^=circle_content]").as("circles");
@@ -57,7 +57,7 @@ describe("queue testing", () => {
   });
 
   it("remove elements in queue correctly", () => {
-    cy.visit("http://localhost:3000/queue");
+    cy.visit(`${baseUrl}/queue`);
     const el = 777;
     const el2 = 666;
     cy.get("input").type(el);
@@ -77,7 +77,7 @@ describe("queue testing", () => {
   });
 
   it("clear all elements", () => {
-    cy.visit("http://localhost:3000/queue");
+    cy.visit(`${baseUrl}/queue`);
     const el = 777;
     const el2 = 666;
     cy.get("input").type(el);

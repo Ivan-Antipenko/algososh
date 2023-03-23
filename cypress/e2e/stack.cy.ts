@@ -1,8 +1,8 @@
 import { DELAY_IN_MS } from "../../src/constants/delays";
-
+import { baseUrl } from "../../src/constants/e2e";
 describe("stack page display correctly", () => {
   before(() => {
-    cy.visit("http://localhost:3000/stack");
+    cy.visit(`${baseUrl}/stack`);
   });
 
   it("buttons disabled if input is empty", () => {
@@ -13,7 +13,7 @@ describe("stack page display correctly", () => {
 
   it("stack add elements correctly", () => {
     const el = 777;
-    cy.visit("http://localhost:3000/stack");
+    cy.visit(`${baseUrl}/stack`);
     cy.get("input").type(el);
     cy.get(".addButton").click();
     cy.get("[class^=circle_content]").as("circles");
@@ -30,7 +30,7 @@ describe("stack page display correctly", () => {
   it("stack remove elements correctly", () => {
     const el = 777;
     const el2 = 999;
-    cy.visit("http://localhost:3000/stack");
+    cy.visit(`${baseUrl}/stack`);
     cy.get("input").type(el);
     cy.get(".addButton").click();
     cy.get("[class^=circle_content]").as("circles");
@@ -57,7 +57,7 @@ describe("stack page display correctly", () => {
   });
 
   it("remove all elements", () => {
-    cy.visit("http://localhost:3000/stack");
+    cy.visit(`${baseUrl}/stack`);
     const el = 777;
     const el2 = 999;
     cy.get("input").type(el);

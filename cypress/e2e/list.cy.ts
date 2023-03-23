@@ -1,8 +1,7 @@
-import { SHORT_DELAY_IN_MS } from "../../src/constants/delays";
-
+import { baseUrl } from "../../src/constants/e2e";
 describe("queue testing", () => {
   before(() => {
-    cy.visit("http://localhost:3000/list");
+    cy.visit(`${baseUrl}/list`);
   });
 
   it("buttons disabled if input is empty", () => {
@@ -15,7 +14,7 @@ describe("queue testing", () => {
   });
 
   it("default list render correctly", () => {
-    cy.visit("http://localhost:3000/list");
+    cy.visit(`${baseUrl}/list`);
     cy.get("[class^=circle_content]").as("circles");
     cy.get("@circles").eq(0).find("[class^=circle_circle]").as("first");
     cy.get("@first")
@@ -36,7 +35,7 @@ describe("queue testing", () => {
   });
 
   it("add in head", () => {
-    cy.visit("http://localhost:3000/list");
+    cy.visit(`${baseUrl}/list`);
     cy.get("[class^=circle_content]").as("circles");
     cy.get("@circles").eq(0).find("[class^=circle_circle]").as("first");
     cy.get("input[placeholder='Введите текст']").type("123");
@@ -46,7 +45,7 @@ describe("queue testing", () => {
   });
 
   it("add in tail", () => {
-    cy.visit("http://localhost:3000/list");
+    cy.visit(`${baseUrl}/list`);
     cy.get("[class^=circle_content]").as("circles");
     cy.get("@circles").last().find("[class^=circle_circle]").as("last");
     cy.get("input[placeholder='Введите текст']").type("123");
@@ -58,7 +57,7 @@ describe("queue testing", () => {
   it("add by index", () => {
     const el = 777;
     const index = 2;
-    cy.visit("http://localhost:3000/list");
+    cy.visit(`${baseUrl}/list`);
     cy.get("[class^=circle_content]").as("circles");
     cy.get("input[placeholder='Введите текст']").type(el);
     cy.get("input[placeholder='Введите индекс']").type(index);
@@ -69,7 +68,7 @@ describe("queue testing", () => {
 
   it("remove by index", () => {
     const index = 2;
-    cy.visit("http://localhost:3000/list");
+    cy.visit(`${baseUrl}/list`);
     cy.get("[class^=circle_content]").as("circles");
     cy.get("input[placeholder='Введите индекс']").type(index);
     cy.get(".removeIndex").click();
@@ -78,14 +77,14 @@ describe("queue testing", () => {
   });
 
   it("remove from head", () => {
-    cy.visit("http://localhost:3000/list");
+    cy.visit(`${baseUrl}/list`);
     cy.get("[class^=circle_content]").as("circles");
     cy.get(".removeHead").click();
     cy.get("@circles").first().contains("34");
   });
 
   it("remove from tail", () => {
-    cy.visit("http://localhost:3000/list");
+    cy.visit(`${baseUrl}/list`);
     cy.get("[class^=circle_content]").as("circles");
     cy.get(".removeTail").click();
     cy.get("@circles").last().contains("8");

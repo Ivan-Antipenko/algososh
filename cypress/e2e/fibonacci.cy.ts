@@ -1,8 +1,9 @@
 import { SHORT_DELAY_IN_MS } from "../../src/constants/delays";
+import { baseUrl } from "../../src/constants/e2e";
 
 describe("fibonacci page render correctly", () => {
   before(() => {
-    cy.visit("http://localhost:3000/fibonacci");
+    cy.visit(`${baseUrl}/fibonacci`);
   });
 
   it("button disabled if input is empty", () => {
@@ -11,7 +12,7 @@ describe("fibonacci page render correctly", () => {
   });
 
   it("fibonacci elements render correctly", () => {
-    cy.visit("http://localhost:3000/fibonacci");
+    cy.visit(`${baseUrl}/fibonacci`);
     const num = 4;
     cy.get("input").type(num);
     cy.get("button").should("not.be.disabled");
